@@ -7,26 +7,24 @@ import { useNavigate } from "react-router-dom";
 
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
+
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
+    passord: "",
   });
-
   const { email, password } = formData;
 
-  const navigate = useNavigate();
-
   const onChange = (e) => {
-    setFormData ((prevState) =>({
+    setFormData((prevState) => ({
       ...prevState,
-      [e.target.id]: e.target.value
-    }))
+      [e.target.id]: e.target.value,
+    }));
   };
   return (
     <>
       <div className="pageContainer">
         <header>
-          <p className="pageHeader">Welcome Back !</p>
+          <p className="pageHeader">Welcome Back!</p>
         </header>
         <main>
           <form>
@@ -34,9 +32,9 @@ function SignIn() {
               type="email"
               className="emailInput"
               placeholder="Email"
-              id="email"
               value={email}
               onChange={onChange}
+              id="email"
             />
 
             <div className="passwordInputDiv">
@@ -44,8 +42,8 @@ function SignIn() {
                 type={showPassword ? "text" : "password"}
                 className="passwordInput"
                 placeholder="Password"
-                id="password"
                 value={password}
+                id="password"
                 onChange={onChange}
               />
               <img
@@ -56,22 +54,18 @@ function SignIn() {
               />
             </div>
 
-            <Link to="/forgot-password" className="forgotPasswordLink">Forogt Password</Link>
-
+            <Link to="/forgot-password" className="forgotPasswordLink">
+              Forgot Password
+            </Link>
             <div className="signInBar">
-              <p className="signInText">
-                Sign In
-              </p>
+              <p className="signInText">Sign In</p>
               <button className="signInButton">
-                <ArrowRightIcon fill="#ffff" width='34px' height='34px' />
+                <ArrowRightIcon fill="white" width="34px" height="34px" />
               </button>
             </div>
           </form>
         </main>
-
-        {/*Google OAuth*/}
-
-        <Link to='/sign-up' className="registerLink">Sign Up Instead</Link>
+        <Link className="registerLink" to='/sign-up'>Sign Up Instead</Link>
       </div>
     </>
   );
