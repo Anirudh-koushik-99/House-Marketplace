@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
+import { toast } from "react-toastify";
 
 function CreateListing() {
-  const [geoloactionEnabled, setGeoloactionEnabled] = useState(true);
+  const [geoloactionEnabled, setGeoloactionEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     type: "rent",
@@ -58,9 +59,55 @@ function CreateListing() {
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMounted]);
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData)
+    setLoading(true);
+    if (discountedPrice >= regularPrice) {
+      setLoading(false);
+      toast.error("Discounted price needs to be less than regular price");
+      return;
+    }
+    if (images.length > 6) {
+      setLoading(false);
+      toast.error("Max 6 images");
+      return;
+    }
+
+    let geoloaction = {};
+    let location;
+
+    if (geoloactionEnabled) {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`
+        /*
+        once registered in google geocode get the key and put it in env variable with the name  REACT_APP_GEOCODE_API_KEY = "asdadsas" */
+        /*
+        add the key from the env using command 
+        process.env.REACT_APP_WHATEVER_NAME
+        */
+       /*
+       Finally restart the server once and the env to .gitignore
+       */
+      );
+      const data = await response.json();
+      geoloaction.lat = data.results[0]?.geometry.location.lat ?? 0;
+      geoloaction.lng = data.results[0]?.geometry.location.lng ?? 0;
+      location =
+        data.status === "ZERO_RESULTS"
+          ? undefined
+          : data.results[0]?.formatted_address;
+
+      if (location === undefined || location.includes("undefined")) {
+        setLoading(false);
+        toast.error("Please enter a correct address");
+        return;
+      }
+    } else {
+      geoloaction.lat = latitude;
+      geoloaction.lng = longitude;
+      location = address;
+    }
+    setLoading(false);
   };
 
   const onMutate = (e) => {
@@ -104,7 +151,7 @@ function CreateListing() {
           <div className="formButtons">
             <button
               type="button"
-              className={type == "sale" ? "formButtonActive" : "formButton"}
+              className={type === "sale" ? "formButtonActive" : "formButton"}
               id="type"
               value="sale"
               onClick={onMutate}
@@ -113,7 +160,7 @@ function CreateListing() {
             </button>
             <button
               type="button"
-              className={type == "rent" ? "formButtonActive" : "formButton"}
+              className={type === "rent" ? "formButtonActive" : "formButton"}
               id="type"
               value="rent"
               onClick={onMutate}
@@ -223,7 +270,6 @@ function CreateListing() {
             id="address"
             value={address}
             onChange={onMutate}
-            required
           />
 
           {!geoloactionEnabled && (
