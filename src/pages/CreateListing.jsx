@@ -6,6 +6,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
@@ -165,9 +166,26 @@ function CreateListing() {
       toast.error('Images not uploaded')
       return
     })
-    console.log(imageUrls)
+
+    const formDataCopy = {
+      ...formData,
+      imageUrls,
+      geoloaction,
+      timestamp: serverTimestamp()
+    }
+
+    delete formDataCopy.images
+    delete formDataCopy.address
+    location && (formDataCopy.location = location)
+    !formDataCopy.offer && delete formDataCopy.discountedPrice
+
+    const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
+
     setLoading(false);
-    
+
+    toast.success('Listing saved successfully')
+
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`)
   };
 
   const onMutate = (e) => {
