@@ -115,7 +115,7 @@ function CreateListing() {
     } else {
       geoloaction.lat = latitude;
       geoloaction.lng = longitude;
-      location = address;
+      
     }
 
     //STORE IMAGES IN FIREBASE
@@ -174,9 +174,10 @@ function CreateListing() {
       timestamp: serverTimestamp()
     }
 
+    formDataCopy.location = address
     delete formDataCopy.images
     delete formDataCopy.address
-    location && (formDataCopy.location = location)
+    
     !formDataCopy.offer && delete formDataCopy.discountedPrice
 
     const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
