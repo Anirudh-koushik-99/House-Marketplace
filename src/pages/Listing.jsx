@@ -5,6 +5,7 @@ import { getAuth } from "firebase/auth";
 import { db } from "../firebase.config";
 import Spinner from "../components/Spinner";
 import shareIcon from "../assets/svg/shareIcon.svg";
+import { MapContainer, Marke, Marker, Popup, TileLayer } from "react-leaflet";
 
 function Listing() {
   const [listing, setListing] = useState(null);
@@ -64,8 +65,7 @@ function Listing() {
         </p>
         {listing.offer && (
             <p className="discountPrice">
-                ${listing.regularPrice - listing.discountedPrice}
-                discount
+                ${listing.regularPrice - listing.discountedPrice} discount
             </p>
         )}
 
@@ -86,7 +86,16 @@ function Listing() {
             </li>
         </ul>
         <p className="listingLocationTitle">Location</p>
-        {/*Map*/}
+        
+        <div className="leafletContainer">
+            <MapContainer style={{height: "100%", width: "100%"}} center={[listing.geoloaction.lat, listing.geoloaction.lng]} zoom={13} scrollWheelZoom={false}>
+                <TileLayer 
+                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                     url='https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png'
+                />
+                <Marker position={[listing.geoloaction.lat, listing.geoloaction.lng]}><Popup>{listing.location}</Popup></Marker>
+            </MapContainer>
+        </div>
 
         {auth.currentUser?.uid !== listing.userRef && (
             <Link to={`/contact/${listing.userRef}?listingName=${listing.name}`} className="primaryButton">
