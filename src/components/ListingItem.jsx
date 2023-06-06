@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ReactComponent as DeleteIcon } from "../assets/svg/deleteIcon.svg";
 import bedIcon from "../assets/svg/bedIcon.svg";
-import bathtunIcon from "../assets/svg/bathtubIcon.svg";
+import bathtubIcon from "../assets/svg/bathtubIcon.svg";
 
 function ListingItem({ listing, id, onDelete }) {
   return (
@@ -29,7 +29,7 @@ function ListingItem({ listing, id, onDelete }) {
             </p>
             <div className="categoryListingInfoDiv"><img src={bedIcon} alt="bed" />
             <p className="categoryListingInfoText">{listing.bedrooms > 1 ? `${listing.bedrooms} Bedrooms` : '1 Bedroom'}</p>
-            <img src={bathtunIcon} alt="bath" />
+            <img src={bathtubIcon} alt="bath" />
             <p className="categoryListingInfoText">{listing.bathrooms > 1 ? `${listing.bathrooms} Bathrooms` : '1 Bathroom'}</p>
             </div>
           </div>
