@@ -8,7 +8,8 @@ import shareIcon from "../assets/svg/shareIcon.svg";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y, FreeMode } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
+import "swiper/css/bundle";
+
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y])
 
 function Listing() {
@@ -46,7 +47,7 @@ function Listing() {
               style={{
                 background: `url(${listing.imageUrls[index]}) center no-repeat`,
                 backgroundSize: "cover",
-                height: "300px",
+                height: "400px",
                 width: "100%"
               }}
               className="swiperSlideDiv"
